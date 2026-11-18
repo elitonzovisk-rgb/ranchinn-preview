@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranchinn — Laboratório Vivo & Espaço de Experiências</title>
+  <meta name="description" content="Um refúgio com raízes, natureza e histórias. Aberto a novas experiências, encontros genuínos, silêncio e projetos com propósito." />
+
+  <!-- Google Fonts: Playfair Display (Editorial Serif) & Plus Jakarta Sans (Clean Humanist Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            linen: {
+              DEFAULT: '#F6F3EC',
+              warm: '#EFEAE0',
+              deep: '#E4DEC9'
+            },
+            olive: {
+              950: '#141B14',
+              900: '#1D281D',
+              800: '#2A3929',
+              700: '#3B4F39',
+              600: '#4E674B',
+              500: '#688264',
+              400: '#8BA387',
+              100: '#E5ECE3'
+            },
+            wood: {
+              950: '#19130E',
+              900: '#261C15',
+              800: '#3B2B20',
+              700: '#543D2E'
+            },
+            clay: {
+              DEFAULT: '#A26748',
+              light: '#C48B6C',
+              dark: '#7D4B30'
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            'editorial': '0 25px 50px -12px rgba(29, 40, 29, 0.08)',
+            'editorial-hover': '0 32px 64px -12px rgba(29, 40, 29, 0.16)',
+            'glass': '0 8px 32px 0 rgba(20, 27, 20, 0.18)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Base Custom Styling & Organic Texture */
+    :root {
+      --bg-linen: #F6F3EC;
+      --text-olive: #1D281D;
+    }
+
+    body {
+      background-color: var(--bg-linen);
+      color: var(--text-olive);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #3B4F39;
+      selection-color: #F6F3EC;
+    }
+
+    ::selection {
+      background-color: #3B4F39;
+      color: #F6F3EC;
+    }
+
+    /* Subtle Tactile Paper/Film Grain Overlay */
+    .grain-overlay {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+    }
+
+    /* Scroll-triggered Reveal Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 120ms; }
+    .reveal-delay-2 { transition-delay: 240ms; }
+    .reveal-delay-3 { transition-delay: 360ms; }
+    .reveal-delay-4 { transition-delay: 480ms; }
+
+    /* Smooth Editorial Image Zoom */
+    .editorial-img-wrap {
+      overflow: hidden;
+    }
+    .editorial-img-wrap img {
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+      will-change: transform;
+    }
+    .editorial-img-wrap:hover img {
+      transform: scale(1.06);
+    }
+
+    /* Hero Subtle Ken Burns Effect */
+    @keyframes slowZoom {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); }
+    }
+    .animate-hero-bg {
+      animation: slowZoom 24s ease-out forwards;
+    }
+
+    /* Lightbox Main Image Transition */
+    .lightbox-stage-img {
+      transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .lightbox-stage-img.switching {
+      opacity: 0;
+      transform: scale(1.03);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #EFEAE0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #688264;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3B4F39;
+    }
+  </style>
+</head>
+
+<body class="antialiased selection:bg-olive-700 selection:text-linen relative">
+
+  <!-- Top Scroll Progress Indicator -->
+  <div id="scroll-progress" class="fixed top-0 left-0 h-[3px] bg-clay z-[60] transition-all duration-150 w-0"></div>
+
+  <!-- Tactile Grain Overlay -->
+  <div class="grain-overlay fixed inset-0 pointer-events-none z-50"></div>
+
+  <!-- 1. FLOATING GLASSMORPHIC NAVBAR -->
+  <header id="navbar-root" class="fixed top-0 left-0 right-0 z-40 px-4 sm:px-8 pt-4 sm:pt-6 transition-all duration-500"></header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- 2. HERO SECTION -->
+    <section id="hero-root" class="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-olive-950"></section>
+
+    <!-- 3. MANIFESTO / THE GAZE ("O OLHAR") -->
+    <section id="olhar" class="relative py-28 sm:py-36 px-6 sm:px-12 lg:px-20 bg-linen overflow-hidden"></section>
+
+    <!-- 4. VISUAL TIMELINE / STORY ("A ORIGEM") -->
+    <section id="origem" class="relative py-28 sm:py-36 px-6 sm:px-12 lg:px-20 bg-linen-warm border-y border-olive-800/10"></section>
+
+    <!-- 5. EDITORIAL EXPERIENCE MOSAIC ("EXPERIÊNCIAS DE ALMA") -->
+    <section id="experiencias" class="relative py-28 sm:py-36 px-6 sm:px-12 lg:px-20 bg-linen"></section>
+
+    <!-- 6. SPACES & SANCTUARIES SHOWCASE ("OS RECANTOS") -->
+    <section id="recantos" class="relative py-28 sm:py-36 px-6 sm:px-12 lg:px-20 bg-olive-950 text-linen overflow-hidden"></section>
+
+    <!-- 7. PHILOSOPHICAL FILTER ("A BALANÇA E A ALMA") -->
+    <section id="filosofia" class="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 bg-linen"></section>
+
+    <!-- 8. HUMANIZED CONTACT SECTION ("UMA CONVERSA PARA COMEÇAR") -->
+    <section id="conversar" class="relative py-24 sm:py-32 px-6 sm:px-12 lg:px-20 bg-linen-warm border-t border-olive-800/10"></section>
+  </main>
+
+  <!-- MINIMALIST FOOTER -->
+  <footer id="footer-root" class="bg-wood-950 text-linen/80 py-16 px-6 sm:px-12 lg:px-20 border-t border-linen/10"></footer>
+
+  <!-- =========================================================================
+       IMMERSIVE SANCTUARY LIGHTBOX & PHOTO GALLERY MODAL
+       Supports multi-photo gallery, thumbnail strip, prev/next controls,
+       keyboard navigation (ESC, Left, Right), and expanded editorial copy.
+       ========================================================================= -->
+  <div
+    id="detail-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 lg:p-10 backdrop-blur-md bg-stone-950/85 opacity-0 transition-opacity duration-300"
+  >
+    <div
+      id="detail-modal-card"
+      class="relative w-full max-w-6xl max-h-[92vh] bg-linen rounded-[2rem] overflow-hidden shadow-2xl border border-linen/15 transform scale-95 transition-all duration-300 flex flex-col lg:grid lg:grid-cols-12"
+    >
+      <!-- Floating Close Button (Top-Right) -->
+      <button
+        id="modal-close"
+        type="button"
+        aria-label="Fechar galeria (ESC)"
+        class="absolute top-4 right-4 z-30 w-11 h-11 rounded-full bg-stone-950/70 hover:bg-clay text-linen flex items-center justify-center backdrop-blur-md border border-linen/20 transition-all duration-300 hover:scale-105 shadow-lg"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- LEFT COLUMN: MAIN STAGE VIEWER & THUMBNAIL STRIP (7 Cols on Desktop) -->
+      <div class="lg:col-span-7 bg-stone-950 flex flex-col justify-between relative select-none">
+        <!-- Main Image Stage -->
+        <div class="relative h-[260px] sm:h-[380px] lg:h-[490px] w-full overflow-hidden flex items-center justify-center bg-stone-950">
+          <img
+            id="modal-img"
+            src=""
+            alt=""
+            class="lightbox-stage-img w-full h-full object-cover"
+          />
+
+          <!-- Subtle Gradient Overlays for Controls Legibility -->
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-stone-950/35 pointer-events-none"></div>
+
+          <!-- Top-Left Counter & Atmosphere Pill -->
+          <div class="absolute top-4 left-4 sm:top-5 sm:left-5 z-20 flex items-center gap-2.5">
+            <span
+              id="modal-counter"
+              class="px-3 py-1 rounded-full bg-stone-950/75 backdrop-blur-md text-linen text-xs font-medium tracking-widest border border-linen/15"
+            >
+              1 / 4
+            </span>
+            <span
+              id="modal-stage-badge"
+              class="hidden sm:inline-block px-3.5 py-1 rounded-full bg-clay/90 backdrop-blur-md text-linen text-[11px] uppercase tracking-widest font-medium"
+            ></span>
+          </div>
+
+          <!-- Previous Photo Button -->
+          <button
+            id="modal-prev"
+            type="button"
+            aria-label="Foto anterior"
+            class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-stone-950/60 hover:bg-stone-950/90 text-linen border border-linen/20 backdrop-blur-md flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
+          >
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Next Photo Button -->
+          <button
+            id="modal-next"
+            type="button"
+            aria-label="Próxima foto"
+            class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-stone-950/60 hover:bg-stone-950/90 text-linen border border-linen/20 backdrop-blur-md flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
+          >
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Keyboard Hint (Desktop) -->
+          <div class="hidden sm:flex items-center gap-1.5 absolute bottom-3 right-4 z-20 text-[11px] text-linen/60 tracking-wider">
+            <i data-lucide="keyboard" class="w-3.5 h-3.5"></i>
+            <span>Use ← → para navegar</span>
+          </div>
+        </div>
+
+        <!-- Clickable Thumbnail Gallery Strip -->
+        <div class="p-3 sm:p-4 bg-stone-900/95 border-t border-linen/10">
+          <div
+            id="modal-thumbnails"
+            class="flex items-center gap-2.5 sm:gap-3 overflow-x-auto pb-1"
+          ></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: EXPANDED EDITORIAL STORY & FEATURES (5 Cols on Desktop) -->
+      <div class="lg:col-span-5 p-6 sm:p-8 lg:p-10 overflow-y-auto flex flex-col justify-between bg-linen max-h-[50vh] lg:max-h-[92vh]">
+        <div class="space-y-6">
+          <!-- Eyebrow Badge -->
+          <div class="flex items-center gap-2.5 pr-10">
+            <span class="w-6 h-[1px] bg-clay"></span>
+            <span
+              id="modal-badge"
+              class="text-xs uppercase tracking-[0.22em] text-clay-dark font-semibold"
+            ></span>
+          </div>
+
+          <!-- Sanctuary Title & Subtitle -->
+          <div>
+            <h3
+              id="modal-title"
+              class="font-serif text-2xl sm:text-4xl text-olive-950 font-normal leading-tight"
+            ></h3>
+            <p
+              id="modal-subtitle"
+              class="mt-2 text-xs sm:text-sm uppercase tracking-wider text-olive-700 font-medium"
+            ></p>
+          </div>
+
+          <!-- Expanded Poetic Narrative -->
+          <p
+            id="modal-description"
+            class="text-olive-800/90 leading-relaxed text-sm sm:text-base font-normal"
+          ></p>
+
+          <!-- Atmospheric Features / Highlights -->
+          <div class="pt-4 border-t border-olive-800/10">
+            <h4 class="text-[11px] uppercase tracking-[0.2em] text-olive-600 font-semibold mb-3.5">
+              Atmosfera & Elementos do Recanto
+            </h4>
+            <div id="modal-features" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="pt-6 mt-6 border-t border-olive-800/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <span class="text-xs text-olive-700 italic font-serif">
+            Sentiu ressonância com este recanto?
+          </span>
+          <a
+            id="modal-cta"
+            href="#conversar"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-olive-800 text-linen hover:bg-clay text-xs sm:text-sm font-medium tracking-wide transition-all duration-300 shadow-sm shrink-0"
+          >
+            <span>Imaginar algo aqui</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       APPLICATION SCRIPT & DECOUPLED CONTENT CONFIGURATION
+       ========================================================================= -->
+  <script>
+    /**
+     * =========================================================================
+     * DECOUPLED CONTENT CONFIGURATION (ranchinnContent)
+     * Edit any text, quote, timeline milestone, card, or replace image URLs
+     * with local paths (e.g., "img/cabana-1.jpg") directly inside this object.
+     * =========================================================================
+     */
+    const ranchinnContent = {
+      brand: {
+        name: "Ranchinn",
+        badge: "Laboratório Vivo",
+        tagline: "Ranchinn — Laboratório Vivo & Espaço de Experiências",
+        locationNote: "Entre pedras, córrego, mata nativa e silêncio vivo."
+      },
+
+      navigation: [
+        { label: "O Olhar", href: "#olhar" },
+        { label: "A Origem", href: "#origem" },
+        { label: "Experiências", href: "#experiencias" },
+        { label: "Recantos", href: "#recantos" },
+        { label: "Conversar", href: "#conversar", isCta: true }
+      ],
+
+      hero: {
+        eyebrow: "Santuário Vivo de Conexão & Terra",
+        headline: "Tem lugares que a gente conhece. E tem lugares onde a gente se conecta e sente.",
+        subtitle: "Um refúgio com raízes, natureza e histórias. Aberto a novas experiências.",
+        scrollLabel: "Adentrar o território",
+        // Substitua por caminho local, ex: "img/hero-ranchinn.jpg"
+        backgroundImage: "img/Fundo_Inicio.jpg",
+        ambientNote: "Ruínas regeneradas • Córrego de água limpa • Oliveira & Pomar"
+      },
+
+      manifesto: {
+        sectionTag: "01 — O Olhar",
+        coreQuote: "O Ranchinn não nasceu da terra. Nasceu de um olhar.",
+        supportingQuote: "Primeiro cultivamos árvores. Depois o lugar começou a cultivar pessoas.",
+        narrativeParagraphs: [
+          "Não somos um hotel convencional, tampouco um espaço comercial de eventos moldado por pacotes padronizados. O Ranchinn é um organismo vivo que respira no ritmo das estações, erguido onde antes havia apenas ruínas, pedras silenciosas, um córrego antigo e a memória de um moinho.",
+          "Aqui, o acolhimento não é uma promessa de marketing — é um fato vivido. Cada trilha aberta na mata, cada muda atravessada pelo riacho e cada roda ao redor do fogo nasceu do desejo genuíno de criar um chão onde as pessoas possam desacelerar, olhar nos olhos e celebrar o que realmente importa."
+        ],
+        // Substitua por caminho local, ex: "img/olhar-oliveira.jpg"
+        featuredImage: "img/Historico_IF19_image15.jpeg",
+        imageCaption: "Raízes profundas: o tempo das árvores ensina o tempo dos encontros.",
+        pillars: [
+          {
+            icon: "eye",
+            title: "Visão Regenerativa",
+            text: "Onde muitos viam abandono e pedras dispersas, enxergamos abrigo, água viva e futuro compartilhado."
+          },
+          {
+            icon: "sprout",
+            title: "Tempo Orgânico",
+            text: "Nada aqui foi apressado. O pomar, a sombra e a confiança cresceram no compasso da própria terra."
+          },
+          {
+            icon: "flame",
+            title: "Calor Humano",
+            text: "A arquitetura mais importante do Ranchinn é invisível: a presença inteira de quem chega e de quem recebe."
+          }
+        ]
+      },
+
+      timeline: {
+        sectionTag: "02 — A Origem",
+        title: "Uma história escrita com mãos na terra e pés na água",
+        subtitle: "Quatro movimentos que transformaram ruínas esquecidas em um santuário vivo de convivência e criação.",
+        steps: [
+          {
+            stepNumber: "I",
+            period: "O Chamado Inicial",
+            title: "O Encontro & O 'Por que não?'",
+            subtitle: "Ruínas, moinho abandonado e o olhar de futuro.",
+            description: "Diante das paredes marcadas pelo tempo, das pedras cobertas de musgo e dos vestígios de um antigo moinho adormecido junto ao córrego, surgiu a pergunta silenciosa que mudaria tudo: 'Por que não?'. Não se tratava de dominar a paisagem, mas de escutar o que aquele pedaço de terra ainda queria contar.",
+            quote: "Toda reconstrução verdadeira começa quando a gente respeita a memória das pedras.",
+            icon: "compass",
+            // Substitua por caminho local, ex: "img/origem-1-moinho.jpg"
+            image: "img/08_caminho_entrada.jpg"
+          },
+          {
+            stepNumber: "II",
+            period: "O Gesto Fundador",
+            title: "A Travessia & O Pomar",
+            subtitle: "Carregando mudas nas costas atravessando o córrego.",
+            description: "Antes de qualquer conforto, vieram as árvores. Atravessamos o córrego dezenas de vezes com mudas nas costas, abrindo clareiras gentis e preparando o solo com as próprias mãos. Cada árvore frutífera plantada era um pacto com os anos seguintes — uma sombra preparada para pessoas que ainda nem tinham chegado.",
+            quote: "Quem carrega uma muda atravessando a correnteza aprende que o futuro pesa doce nos ombros.",
+            icon: "trees",
+            // Substitua por caminho local, ex: "img/origem-2-pomar.jpg"
+            image: "img/16_mamao_no_pe.jpg"
+          },
+          {
+            stepNumber: "III",
+            period: "A Prova do Abrigo",
+            title: "O Refúgio & As Pessoas",
+            subtitle: "O acolhimento na pandemia e os momentos decisivos.",
+            description: "Quando o mundo lá fora precisou parar e se fechar, o Ranchinn revelou sua vocação mais profunda: ser refúgio seguro para a alma. Nos momentos mais decisivos, o espaço acolheu silêncios, recomeços, famílias e amigos que buscavam ar puro, horizonte aberto e um lugar onde a vida continuasse pulsando com sentido.",
+            quote: "Foi no recolhimento que compreendemos: esta terra não pertence a nós, ela pertence ao encontro.",
+            icon: "heart-handshake",
+            // Substitua por caminho local, ex: "img/origem-3-refugio.jpg"
+            image: "img/Historico_IF19_image14.jpeg"
+          },
+          {
+            stepNumber: "IV",
+            period: "O Florescer Presente",
+            title: "Os Primeiros Frutos & A Oliveira",
+            subtitle: "As árvores crescidas, rituais de silêncio e novas direções.",
+            description: "Hoje as copas já oferecem abrigo generoso, o pomar entrega seus frutos e a Oliveira tornou-se guardiã de pausas e contemplação. O Ranchinn amadureceu como um Laboratório Vivo: aberto a celebrações autênticas, música despretensiosa, imersões criativas e projetos que honram a delicadeza do lugar.",
+            quote: "As raízes estão firmes. Agora o espaço se abre para novas histórias que queiram florescer com verdade.",
+            icon: "feather",
+            // Substitua por caminho local, ex: "img/origem-4-oliveira.jpg"
+            image: "img/18_frutos_laranja.jpg"
+          }
+        ]
+      },
+
+      experiences: {
+        sectionTag: "03 — Experiências de Alma",
+        title: "O que ganha vida quando as pessoas se encontram aqui",
+        subtitle: "Não formatamos eventos em série. Abrimos espaço para vivências com identidade, beleza natural e presença inteira.",
+        items: [
+          {
+            id: "casamentos",
+            title: "Casamentos & Celebrações",
+            shortDesc: "Capela na mata, cortejo, trilha iluminada e viola.",
+            detailedDescription: "Celebrações íntimas onde a natureza não é apenas cenário, mas testemunha viva. Imagine um cortejo caminhando sem pressa pela trilha iluminada ao entardecer, votos ditos na Capela cercada pela mata nativa e o som orgânico da viola anunciando a alegria do encontro sob as árvores.",
+            badge: "Rituais & Afeto",
+            icon: "sparkles",
+            spanClass: "md:col-span-7 lg:col-span-7",
+            features: ["Capela na Mata", "Cortejo Orgânico", "Trilha Iluminada", "Celebrações Íntimas"],
+            // Substitua por caminhos locais, ex: "img/exp-casamentos-1.jpg"
+            image: "img/CASAMENTO.jpg",
+            gallery: [
+              "img/CASAMENTO.jpg",
+              "img/07_capela_dia.jpg",
+              "img/casamento capela.jpg",
+              "img/23_trilha_nova_a.jpg"
+            ]
+          },
+          {
+            id: "roda-viola",
+            title: "Roda de Viola & Encontros",
+            shortDesc: "Música acústica, fogueira e conexões simples.",
+            detailedDescription: "Quando a noite desce sobre o deck e a fogueira é acesa, as conversas ganham outro tom. A música acústica, a roda de viola, o vinho partilhado e o estalar da lenha criam aquela atmosfera rara onde desconhecidos se tornam amigos de longa data.",
+            badge: "Fogo & Acústico",
+            icon: "music",
+            spanClass: "md:col-span-5 lg:col-span-5",
+            features: ["Fogueira Acesa", "Violão & Viola", "Noites Estreladas", "Partilha Genuína"],
+            // Substitua por caminhos locais, ex: "img/exp-viola-1.jpg"
+            image: "img/fogueira capela.jpg",
+            gallery: [
+              "img/fogueira capela.jpg",
+              "img/06_encontro_fogueira_grupo.jpg",
+              "img/05_fogueira_firepit.jpg"
+            ]
+          },
+          {
+            id: "oliveira-silencio",
+            title: "A Oliveira, Pausa & Silêncio",
+            shortDesc: "Desacelerar, contemplar e respirar sem pressa.",
+            detailedDescription: "Para quem precisa silenciar o ruído do mundo e escutar a própria respiração. Sob a copa serena da Oliveira ou à margem do córrego, o tempo deixa de ser cobrança e volta a ser presença pura — ideal para escrita, leitura, meditação ou simplesmente existir.",
+            badge: "Contemplação",
+            icon: "wind",
+            spanClass: "md:col-span-4 lg:col-span-4",
+            features: ["Silêncio Fértil", "Sob a Oliveira", "Escuta Interior", "Tempo Sem Relógio"],
+            // Substitua por caminhos locais, ex: "img/exp-oliveira-1.jpg"
+            image: "img/Historico_IF19_image17.jpeg",
+            gallery: [
+              "img/Historico_IF19_image17.jpeg",
+              "img/15_orquidea_rosa.jpg",
+              "img/17_agua_lagoa.jpg"
+            ]
+          },
+          {
+            id: "mata-trilhas",
+            title: "Mata, Trilhas & Pomar",
+            shortDesc: "Contato com a terra, horta e regeneração.",
+            detailedDescription: "Caminhar pelas trilhas sombreadas, colher frutas diretamente do pé, sentir o cheiro da terra úmida e acompanhar de perto o ciclo da horta e da regeneração florestal. Uma vivência sensorial para reconectar corpo e natureza.",
+            badge: "Terra Viva",
+            icon: "leaf",
+            spanClass: "md:col-span-4 lg:col-span-4",
+            features: ["Agrofloresta & Pomar", "Horta Viva", "Caminhada na Mata", "Solo Regenerado"],
+            // Substitua por caminhos locais, ex: "img/exp-trilhas-1.jpg"
+            image: "img/25_trilha_nova_c.jpg",
+            gallery: [
+              "img/25_trilha_nova_c.jpg",
+              "img/18_frutos_laranja.jpg",
+              "img/16_mamao_no_pe.jpg",
+              "img/14_chifre_de_veado.jpg"
+            ]
+          },
+          {
+            id: "conexoes-fronteiras",
+            title: "Conexões Sem Fronteiras",
+            shortDesc: "Acolhendo visitantes de diferentes lugares e culturas.",
+            detailedDescription: "O Ranchinn tem alma cosmopolita e pés na roça. Recebemos viajantes, pensadores, artistas e amigos de diferentes partes do Brasil e do mundo para trocas culturais, oficinas, residências criativas e mesas fartas de histórias.",
+            badge: "Intercâmbio Humano",
+            icon: "globe",
+            spanClass: "md:col-span-4 lg:col-span-4",
+            features: ["Culturas em Diálogo", "Imersões Criativas", "Hospitalidade Genuína", "Projetos Vivos"],
+            // Substitua por caminhos locais, ex: "img/exp-conexoes-1.jpg"
+            image: "img/06_encontro_fogueira_grupo.jpg",
+            gallery: [
+              "img/06_encontro_fogueira_grupo.jpg",
+              "img/10_area_gourmet.jpg",
+              "img/11_piscina.jpg",
+              "img/Historico_IF19_image14.jpeg"
+            ]
+          }
+        ]
+      },
+
+      /* =====================================================================
+         04 — OS RECANTOS (SANCTUARIES) WITH MULTI-PHOTO GALLERIES
+         Each sanctuary includes:
+         - `gallery`: 4 high-resolution images (swap with local paths e.g. "img/cabana-1.jpg")
+         - `detailedDescription`: Expanded poetic narrative for the lightbox
+         - `features`: Key atmospheric highlights rendered with Lucide icons
+         ===================================================================== */
+      sanctuaries: {
+        sectionTag: "04 — Os Recantos",
+        title: "Pequenos santuários dentro do mesmo território",
+        subtitle: "Cada canto do Ranchinn guarda uma atmosfera própria — do recolhimento da madeira ao murmúrio constante da água. Clique em qualquer recanto para abrir a galeria completa.",
+        spaces: [
+          {
+            id: "cabana",
+            name: "A Cabana",
+            tagline: "Madeira, aconchego e despertar com o canto dos pássaros",
+            description: "Construída com respeito à paisagem ao redor, A Cabana é o coração do abrigo no Ranchinn — onde o tempo desacelera entre texturas naturais e luz filtrada pelas árvores.",
+            detailedDescription: "Ergue-se discretamente entre as árvores como se sempre tivesse pertencido à floresta. Na Cabana, a madeira aquece o olhar, as janelas emolduram o verde vivo da mata e o despertar acontece sem despertador — guiado apenas pela luz da manhã e pelo canto dos pássaros. É um espaço desenhado para o recolhimento criativo, conversas longas à meia-luz, leitura na varanda e a sensação rara de estar verdadeiramente em casa longe do ruído urbano.",
+            atmosphere: "Recolhimento & Calor",
+            icon: "home",
+            features: [
+              "Arquitetura rústica em madeira nobre",
+              "Varanda integrada à copa das árvores",
+              "Iluminação natural suave e acolhedora",
+              "Silêncio noturno profundo e reparador"
+            ],
+            // Substitua os URLs abaixo por caminhos locais: ex: "img/cabana-1.jpg", "img/cabana-2.jpg"...
+            gallery: [
+              "img/Historico_IF19_image14.jpeg",
+              "img/Historico_IF19_image16.jpeg",
+              "img/Historico_IF19_image19.jpeg"
+            ]
+          },
+          {
+            id: "capela",
+            name: "A Capela",
+            tagline: "Espiritualidade livre emoldurada pela mata nativa",
+            description: "Ao entrar na Capela do Ranchinn, o silêncio pede passagem. Integrada à vegetação, acolhe desde casamentos íntimos até momentos solitários de gratidão.",
+            detailedDescription: "Nascida da ideia de que o sagrado habita a simplicidade, A Capela na mata não impõe dogmas — ela oferece presença. Cercada por árvores crescidas, pedras e feixes de sol que atravessam as folhas, é o cenário onde casais trocam votos verdadeiros, famílias celebram rituais de passagem e visitantes encontram um banco silencioso para respirar fundo e agradecer.",
+            atmosphere: "Sagrado & Simplicidade",
+            icon: "sun",
+            features: [
+              "Santuário aberto integrado à mata nativa",
+              "Cortejo natural por trilha sombreada",
+              "Acústica íntima para voz e cordas",
+              "Espiritualidade ecumênica e acolhedora"
+            ],
+            // Substitua os URLs abaixo por caminhos locais: ex: "img/capela-1.jpg", "img/capela-2.jpg"...
+            gallery: [
+              "img/07_capela_dia.jpg",
+              "img/02_capela_noite_frontal.jpg",
+              "img/01_capela_noite_longa.jpg",
+              "img/23_trilha_nova_a.jpg"
+            ]
+          },
+          {
+            id: "deck-fogo",
+            name: "O Deck & Fogo",
+            tagline: "Onde as estrelas encontram a brasa e a prosa se alonga",
+            description: "Ponto de convergência ao entardecer. O madeiramento suspenso convida a observar o horizonte enquanto o fogo de chão aquece as mãos e inspira a viola.",
+            detailedDescription: "Existe uma sabedoria ancestral em sentar em roda ao redor do fogo. Quando o sol se despede atrás da mata e as primeiras estrelas despontam, o Deck & Fogo torna-se o coração pulsante do Ranchinn. É ali que a viola ponteia canções sem pressa, o vinho acompanha histórias sinceras e o estalar da lenha lembra que a felicidade quase sempre mora nas coisas mais simples.",
+            atmosphere: "Convivência & Música",
+            icon: "flame",
+            features: [
+              "Fogo de chão sob o céu estrelado",
+              "Deck de madeira com vista para o vale",
+              "Espaço ideal para roda de viola acústica",
+              "Iluminação quente de entardecer e brasa"
+            ],
+            // Substitua os URLs abaixo por caminhos locais: ex: "img/deck-1.jpg", "img/deck-2.jpg"...
+            gallery: [
+              "img/fogueira capela.jpg",
+              "img/05_fogueira_firepit.jpg",
+              "img/06_encontro_fogueira_grupo.jpg",
+              "img/Historico_IF19_image16.jpeg"
+            ]
+          },
+          {
+            id: "trilhas",
+            name: "As Trilhas",
+            tagline: "Caminhos sombreados que convidam a andar sem pressa",
+            description: "Percursos desenhados organicamente entre árvores crescidas, pedras históricas e clareiras. De dia, contemplação botânica; à noite, caminhos iluminados.",
+            detailedDescription: "Cada trilha do Ranchinn foi aberta respeitando o relevo, as raízes e as pedras que já estavam ali. Caminhar por elas é atravessar diferentes microclimas de sombra fresca, aromas de terra úmida, árvores frutíferas do pomar e recantos de pausa sob a Oliveira. Em noites de celebração, cordões de luz suave transformam o caminho na mata em uma travessia poética.",
+            atmosphere: "Descoberta & Movimento",
+            icon: "footprints",
+            features: [
+              "Percursos sombreados por mata regenerada",
+              "Conexão direta com o Pomar e a Oliveira",
+              "Iluminação cênica suave para cortejos",
+              "Bancos de pausa e contemplação no caminho"
+            ],
+            // Substitua os URLs abaixo por caminhos locais: ex: "img/trilhas-1.jpg", "img/trilhas-2.jpg"...
+            gallery: [
+              "img/Historico_IF19_image15.jpeg",
+              "img/24_trilha_nova_b.jpg",
+              "img/04_trilha_noturna_iluminada.jpg",
+              "img/29_trilha_nova_g.jpg"
+            ]
+          },
+          {
+            id: "corrego",
+            name: "O Córrego",
+            tagline: "A trilha sonora viva que atravessa a história do lugar",
+            description: "Testemunha das primeiras travessias com mudas nas costas e guardião das ruínas do antigo moinho. Suas águas claras lembram que a vida é fluxo.",
+            detailedDescription: "Antes mesmo da primeira árvore ser plantada por nossas mãos, o Córrego já cantava entre as pedras. Foi atravessando suas águas frescas com mudas nas costas que o pomar nasceu, e é às suas margens que repousam os vestígios históricos do antigo moinho. Sentar sobre as pedras ouvindo a correnteza é o remédio mais antigo e eficaz para acalmar a mente.",
+            atmosphere: "Fluidez & Renovação",
+            icon: "waves",
+            features: [
+              "Água corrente cristalina sobre leito de pedras",
+              "Ruínas históricas do antigo moinho",
+              "Microclima fresco sob a mata ciliar",
+              "Acústica natural de água em movimento"
+            ],
+            // Substitua os URLs abaixo por caminhos locais: ex: "img/corrego-1.jpg", "img/corrego-2.jpg"...
+            gallery: [
+              "img/17_agua_lagoa.jpg",
+              "img/14_chifre_de_veado.jpg",
+              "img/15_orquidea_rosa.jpg"
+            ]
+          }
+        ]
+      },
+
+      philosophy: {
+        sectionTag: "05 — A Balança e a Alma",
+        quote: "Nem toda oportunidade que cabe fisicamente no Ranchinn cabe na alma do Ranchinn.",
+        lead: "Escolhemos caminhar com leveza, liberdade e propósito. Por isso, cada encontro ou parceria que acontece aqui nasce de uma sintonia prévia de valores.",
+        description: "O Ranchinn preserva sua essência porque sabe dizer 'sim' ao que é verdadeiro e 'não' ao que descaracteriza o silêncio, a terra e a intimidade do lugar. Buscamos ideias, anfitriões, casais, artistas e projetos que queiram somar à história viva deste território.",
+        resonatesTitle: "O que pulsa com a nossa alma",
+        resonatesList: [
+          "Encontros autênticos, sem pressa e com presença real",
+          "Celebrações íntimas que honram a natureza como parte da história",
+          "Projetos culturais, musicais, gastronômicos ou regenerativos com propósito",
+          "Pessoas que cuidam do espaço como quem visita a casa de um grande amigo"
+        ],
+        preservesTitle: "O que escolhemos preservar",
+        preservesList: [
+          "A paz sonora da mata, do córrego e dos vizinhos da terra",
+          "A escala humana — preferimos profundidade a multidões impessoais",
+          "A liberdade de co-criar cada experiência de forma artesanal, sem rótulos rígidos"
+        ]
+      },
+
+      contact: {
+        sectionTag: "06 — Uma Conversa para Começar",
+        headline: "Tem uma ideia, encontro, celebração ou projeto coerente com o Ranchinn? Vamos conversar.",
+        subheadline: "Não temos formulários automáticos de reserva. Toda história aqui começa com uma boa conversa entre pessoas.",
+        formLabels: {
+          name: "Como podemos te chamar?",
+          namePlaceholder: "Seu nome completo",
+          contact: "Seu WhatsApp ou E-mail",
+          contactPlaceholder: "(00) 00000-0000 ou seu@email.com",
+          intentionLabel: "Qual semente você gostaria de plantar aqui?",
+          intentions: [
+            "Celebração / Casamento Íntimo",
+            "Encontro & Roda de Viola",
+            "Retiro / Pausa & Silêncio",
+            "Projeto Cultural / Imersão",
+            "Apenas conhecer e tomar um café"
+          ],
+          message: "Conte sobre o momento que você imagina viver aqui",
+          messagePlaceholder: "Compartilhe um pouco da sua ideia, quantas pessoas fariam parte, a época do ano ou o sentimento que você busca...",
+          whatsappButton: "Iniciar conversa no WhatsApp",
+          emailButton: "Enviar por E-mail",
+          privacyNote: "Prometemos responder com calma, atenção e café passado na hora."
+        },
+        // Configure aqui o número real de WhatsApp (apenas dígitos com DDI + DDD) e o e-mail oficial
+        channels: {
+          whatsappNumber: "5511999999999",
+          emailAddress: "contato@ranchinn.com.br",
+          locationLabel: "Brasil • Território de Mata, Córrego & Silêncio"
+        }
+      },
+
+      footer: {
+        signature: "Ranchinn — Laboratório Vivo & Espaço de Experiências",
+        whisper: "Primeiro cultivamos árvores. Depois o lugar começou a cultivar pessoas."
+      }
+    };
+
+    /**
+     * =========================================================================
+     * DOM RENDERING ENGINE
+     * Dynamically builds all sections from `ranchinnContent`
+     * =========================================================================
+     */
+    function renderApplication(content) {
+      renderNavbar(content);
+      renderHero(content);
+      renderManifesto(content);
+      renderTimeline(content);
+      renderExperiences(content);
+      renderRecantos(content);
+      renderPhilosophy(content);
+      renderContact(content);
+      renderFooter(content);
+
+      // Initialize Lucide Icons after DOM injection
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+
+      // Initialize Interactive Behaviors
+      initScrollAnimations();
+      initNavbarBehavior();
+      initLightboxGallery(content);
+      initContactForm(content);
+    }
+
+    /* 1. Render Floating Glassmorphic Navbar */
+    function renderNavbar(content) {
+      const navRoot = document.getElementById('navbar-root');
+      const linksHtml = content.navigation
+        .map(item => {
+          if (item.isCta) {
+            return `
+              <a href="${item.href}" class="px-5 py-2.5 rounded-full bg-linen text-olive-950 hover:bg-clay hover:text-linen text-xs sm:text-sm font-medium tracking-wide transition-all duration-300 shadow-sm">
+                ${item.label}
+              </a>
+            `;
+          }
+          return `
+            <a href="${item.href}" class="text-linen/90 hover:text-linen text-sm font-normal tracking-wide transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1.5px] after:bg-clay-light hover:after:w-full after:transition-all">
+              ${item.label}
+            </a>
+          `;
+        })
+        .join('');
+
+      const mobileLinksHtml = content.navigation
+        .map(item => `
+          <a href="${item.href}" class="mobile-nav-link block py-3 text-lg font-serif text-linen/90 hover:text-clay-light border-b border-linen/10 transition">
+            ${item.label}
+          </a>
+        `)
+        .join('');
+
+      navRoot.innerHTML = `
+        <nav id="navbar-inner" class="max-w-7xl mx-auto rounded-full px-5 sm:px-8 py-3.5 bg-olive-950/65 backdrop-blur-md border border-linen/15 shadow-glass transition-all duration-500 flex items-center justify-between">
+          <!-- Brand + Subtle Badge -->
+          <a href="#" class="flex items-center gap-3 group">
+            <span class="font-serif text-xl sm:text-2xl tracking-tight text-linen font-medium group-hover:text-clay-light transition">
+              ${content.brand.name}
+            </span>
+            <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] uppercase tracking-widest bg-linen/10 text-linen/90 border border-linen/15">
+              <span class="w-1.5 h-1.5 rounded-full bg-clay-light animate-pulse"></span>
+              ${content.brand.badge}
+            </span>
+          </a>
+
+          <!-- Desktop Anchor Links -->
+          <div class="hidden md:flex items-center gap-7">
+            ${linksHtml}
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-btn" aria-label="Abrir menu" class="md:hidden w-10 h-10 rounded-full bg-linen/10 text-linen flex items-center justify-center hover:bg-linen/20 transition">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </nav>
+
+        <!-- Mobile Glassmorphic Drawer -->
+        <div id="mobile-menu-drawer" class="hidden md:hidden mt-3 max-w-7xl mx-auto rounded-3xl p-6 bg-olive-950/95 backdrop-blur-xl border border-linen/15 shadow-2xl">
+          <div class="flex items-center justify-between pb-4 mb-2 border-b border-linen/10">
+            <span class="text-xs uppercase tracking-widest text-clay-light">${content.brand.badge}</span>
+            <span class="text-xs text-linen/60">${content.brand.locationNote}</span>
+          </div>
+          <div class="flex flex-col space-y-1">
+            ${mobileLinksHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    /* 2. Render Hero Section */
+    function renderHero(content) {
+      const heroRoot = document.getElementById('hero-root');
+      const { hero } = content;
+
+      heroRoot.innerHTML = `
+        <!-- Background Image with Slow Ken Burns & Soft Dark Gradient Overlay -->
+        <div class="absolute inset-0 z-0 overflow-hidden">
+          <img
+            src="${hero.backgroundImage}"
+            alt="${content.brand.name}"
+            class="w-full h-full object-cover object-center animate-hero-bg filter brightness-90"
+          />
+          <div class="absolute inset-0 bg-gradient-to-b from-olive-950/75 via-olive-950/55 to-olive-950/90"></div>
+          <div class="absolute inset-0 bg-radial from-transparent via-olive-950/20 to-olive-950/75"></div>
+        </div>
+
+        <!-- Hero Content Container -->
+        <div class="relative z-10 max-w-5xl mx-auto px-6 sm:px-12 pt-28 pb-20 text-center flex flex-col items-center">
+          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-linen/10 backdrop-blur-md border border-linen/20 text-linen/90 text-xs uppercase tracking-[0.2em] mb-8">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-clay-light"></i>
+            <span>${hero.eyebrow}</span>
+          </div>
+
+          <h1 class="reveal reveal-delay-1 font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[4.15rem] text-linen font-normal leading-[1.14] tracking-tight max-w-4xl">
+            ${hero.headline}
+          </h1>
+
+          <p class="reveal reveal-delay-2 mt-7 text-base sm:text-xl text-linen/85 font-light max-w-2xl leading-relaxed">
+            ${hero.subtitle}
+          </p>
+
+          <!-- Ambient Location Strip -->
+          <div class="reveal reveal-delay-3 mt-8 text-xs sm:text-sm text-linen/65 tracking-wider uppercase">
+            ${hero.ambientNote}
+          </div>
+
+          <!-- Smooth Scroll Indicator Button -->
+          <div class="reveal reveal-delay-4 mt-14 sm:mt-16">
+            <a
+              href="#olhar"
+              class="group inline-flex flex-col items-center gap-3 text-linen/80 hover:text-linen transition"
+              aria-label="${hero.scrollLabel}"
+            >
+              <span class="text-xs uppercase tracking-[0.22em] font-medium">${hero.scrollLabel}</span>
+              <span class="w-12 h-12 rounded-full border border-linen/30 flex items-center justify-center group-hover:border-clay-light group-hover:bg-linen/10 transition-all duration-500">
+                <i data-lucide="arrow-down" class="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 3. Render Manifesto / The Gaze ("O Olhar") */
+    function renderManifesto(content) {
+      const manifestoRoot = document.getElementById('olhar');
+      const { manifesto } = content;
+
+      const paragraphsHtml = manifesto.narrativeParagraphs
+        .map(p => `<p class="text-olive-800/90 text-base sm:text-lg leading-relaxed font-normal">${p}</p>`)
+        .join('');
+
+      const pillarsHtml = manifesto.pillars
+        .map((pillar, idx) => `
+          <div class="reveal reveal-delay-${idx + 1} p-7 rounded-2xl bg-linen-warm/80 border border-olive-800/10 hover:border-olive-700/30 transition-all duration-500">
+            <div class="w-11 h-11 rounded-xl bg-olive-800 text-linen flex items-center justify-center mb-5">
+              <i data-lucide="${pillar.icon}" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-serif text-xl text-olive-950 font-medium mb-2.5">${pillar.title}</h3>
+            <p class="text-sm sm:text-base text-olive-800/80 leading-relaxed">${pillar.text}</p>
+          </div>
+        `)
+        .join('');
+
+      manifestoRoot.innerHTML = `
+        <div class="max-w-6xl mx-auto">
+          <!-- Section Eyebrow -->
+          <div class="reveal flex items-center gap-3 mb-10">
+            <span class="w-10 h-[1px] bg-clay"></span>
+            <span class="text-xs uppercase tracking-[0.25em] text-clay-dark font-semibold">${manifesto.sectionTag}</span>
+          </div>
+
+          <!-- Core Large-Scale Quote -->
+          <blockquote class="reveal font-serif text-3xl sm:text-5xl lg:text-6xl text-olive-950 leading-[1.16] tracking-tight max-w-4xl">
+            “${manifesto.coreQuote}”
+          </blockquote>
+
+          <!-- Supporting Quote Highlight -->
+          <div class="reveal reveal-delay-1 mt-8 sm:mt-10 pl-6 sm:pl-8 border-l-2 border-clay max-w-3xl">
+            <p class="font-serif italic text-xl sm:text-3xl text-olive-700 leading-snug">
+              “${manifesto.supportingQuote}”
+            </p>
+          </div>
+
+          <!-- Two-Column Editorial Narrative & Image -->
+          <div class="mt-16 sm:mt-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div class="reveal lg:col-span-6 space-y-6">
+              ${paragraphsHtml}
+              <div class="pt-4 flex items-center gap-4 text-xs uppercase tracking-[0.2em] text-olive-600 font-medium">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-clay"></i>
+                <span>Acolhimento como fato vivido, não promessa</span>
+              </div>
+            </div>
+
+            <div class="reveal reveal-delay-2 lg:col-span-6">
+              <div class="relative rounded-3xl overflow-hidden shadow-editorial border border-olive-800/10 editorial-img-wrap">
+                <img
+                  src="${manifesto.featuredImage}"
+                  alt="O Olhar do Ranchinn"
+                  class="w-full h-[380px] sm:h-[440px] object-cover"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-olive-950/60 via-transparent to-transparent"></div>
+                <p class="absolute bottom-5 left-6 right-6 text-xs sm:text-sm text-linen/90 font-light italic">
+                  ${manifesto.imageCaption}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 Organic Pillars -->
+          <div class="mt-16 sm:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+            ${pillarsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    /* 4. Render Visual Timeline / Story ("A Origem") */
+    function renderTimeline(content) {
+      const timelineRoot = document.getElementById('origem');
+      const { timeline } = content;
+
+      const stepsHtml = timeline.steps
+        .map((step, index) => {
+          const isEven = index % 2 === 1;
+          return `
+            <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <!-- Image Column -->
+              <div class="reveal ${isEven ? 'lg:col-span-6 lg:order-2' : 'lg:col-span-6'}">
+                <div class="relative rounded-3xl overflow-hidden shadow-editorial border border-olive-800/15 editorial-img-wrap group">
+                  <img
+                    src="${step.image}"
+                    alt="${step.title}"
+                    class="w-full h-[320px] sm:h-[390px] object-cover"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-olive-950/70 via-olive-950/15 to-transparent"></div>
+                  <div class="absolute top-5 left-5 px-4 py-1.5 rounded-full bg-olive-950/75 backdrop-blur-md text-linen text-xs uppercase tracking-widest border border-linen/15">
+                    Capítulo ${step.stepNumber} • ${step.period}
+                  </div>
+                  <div class="absolute bottom-5 left-6 right-6">
+                    <p class="font-serif italic text-linen/95 text-sm sm:text-base">
+                      “${step.quote}”
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Text Narrative Column -->
+              <div class="reveal reveal-delay-1 ${isEven ? 'lg:col-span-6 lg:order-1 lg:pr-10' : 'lg:col-span-6 lg:pl-10'} space-y-4">
+                <div class="inline-flex items-center gap-2.5 text-clay-dark text-xs uppercase tracking-[0.2em] font-semibold">
+                  <span class="w-8 h-8 rounded-full bg-clay/15 text-clay-dark flex items-center justify-center">
+                    <i data-lucide="${step.icon}" class="w-4 h-4"></i>
+                  </span>
+                  <span>Passo 0${index + 1}</span>
+                </div>
+
+                <h3 class="font-serif text-2xl sm:text-4xl text-olive-950 font-normal leading-tight">
+                  ${step.title}
+                </h3>
+
+                <p class="text-sm sm:text-base font-medium text-olive-700 uppercase tracking-wide">
+                  ${step.subtitle}
+                </p>
+
+                <p class="text-olive-800/85 text-base sm:text-lg leading-relaxed pt-2">
+                  ${step.description}
+                </p>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+
+      timelineRoot.innerHTML = `
+        <div class="max-w-6xl mx-auto">
+          <!-- Section Header -->
+          <div class="reveal max-w-3xl mb-20">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-[1px] bg-clay"></span>
+              <span class="text-xs uppercase tracking-[0.25em] text-clay-dark font-semibold">${timeline.sectionTag}</span>
+            </div>
+            <h2 class="font-serif text-3xl sm:text-5xl text-olive-950 leading-tight">
+              ${timeline.title}
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-olive-800/80 leading-relaxed">
+              ${timeline.subtitle}
+            </p>
+          </div>
+
+          <!-- Alternating Steps Container -->
+          <div class="relative space-y-20 sm:space-y-28">
+            ${stepsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    /* 5. Render Editorial Experience Mosaic ("Experiências de Alma") */
+    function renderExperiences(content) {
+      const mosaicRoot = document.getElementById('experiencias');
+      const { experiences } = content;
+
+      const cardsHtml = experiences.items
+        .map(item => `
+          <article
+            data-modal-type="experience"
+            data-modal-id="${item.id}"
+            class="reveal ${item.spanClass} group relative rounded-3xl overflow-hidden shadow-editorial hover:shadow-editorial-hover border border-olive-800/10 cursor-pointer transition-all duration-500 hover:-translate-y-1.5 min-h-[360px] sm:min-h-[420px] flex flex-col justify-end editorial-img-wrap"
+          >
+            <img
+              src="${item.image}"
+              alt="${item.title}"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-olive-950/95 via-olive-950/45 to-olive-950/10 group-hover:via-olive-950/55 transition-colors duration-500"></div>
+
+            <!-- Top Badge & Icon -->
+            <div class="absolute top-6 left-6 right-6 flex items-center justify-between z-10">
+              <span class="px-3.5 py-1.5 rounded-full text-xs uppercase tracking-widest bg-linen/15 backdrop-blur-md text-linen border border-linen/20">
+                ${item.badge}
+              </span>
+              <span class="w-10 h-10 rounded-full bg-linen/15 backdrop-blur-md text-linen flex items-center justify-center border border-linen/20 group-hover:bg-clay group-hover:border-clay transition-colors duration-300">
+                <i data-lucide="${item.icon}" class="w-4 h-4"></i>
+              </span>
+            </div>
+
+            <!-- Bottom Editorial Copy -->
+            <div class="relative z-10 p-6 sm:p-8">
+              <h3 class="font-serif text-2xl sm:text-3xl text-linen font-normal mb-2 group-hover:text-clay-light transition-colors">
+                ${item.title}
+              </h3>
+              <p class="text-linen/85 text-sm sm:text-base leading-relaxed mb-5">
+                ${item.shortDesc}
+              </p>
+              <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-linen/90 font-medium group-hover:text-clay-light transition">
+                <span>Sentir esta vivência</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+            </div>
+          </article>
+        `)
+        .join('');
+
+      mosaicRoot.innerHTML = `
+        <div class="max-w-7xl mx-auto">
+          <!-- Header -->
+          <div class="reveal flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div class="max-w-2xl">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="w-10 h-[1px] bg-clay"></span>
+                <span class="text-xs uppercase tracking-[0.25em] text-clay-dark font-semibold">${experiences.sectionTag}</span>
+              </div>
+              <h2 class="font-serif text-3xl sm:text-5xl text-olive-950 leading-tight">
+                ${experiences.title}
+              </h2>
+            </div>
+            <p class="text-olive-800/80 text-base sm:text-lg max-w-md leading-relaxed">
+              ${experiences.subtitle}
+            </p>
+          </div>
+
+          <!-- 12-Column Editorial Bento Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
+            ${cardsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    /* 6. Render Spaces & Sanctuaries Showcase ("Os Recantos") */
+    function renderRecantos(content) {
+      const recantosRoot = document.getElementById('recantos');
+      const { sanctuaries } = content;
+
+      const cardsHtml = sanctuaries.spaces
+        .map((space, idx) => {
+          const coverImage = space.gallery && space.gallery.length > 0 ? space.gallery[0] : '';
+          const photoCount = space.gallery ? space.gallery.length : 1;
+
+          return `
+            <article
+              data-modal-type="sanctuary"
+              data-modal-id="${space.id}"
+              class="reveal group bg-olive-900/70 hover:bg-olive-900 rounded-3xl overflow-hidden border border-linen/10 hover:border-clay-light/40 transition-all duration-500 flex flex-col justify-between cursor-pointer hover:-translate-y-1.5 editorial-img-wrap"
+            >
+              <div>
+                <div class="relative h-64 overflow-hidden">
+                  <img
+                    src="${coverImage}"
+                    alt="${space.name}"
+                    class="w-full h-full object-cover"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-olive-950 via-olive-950/25 to-transparent"></div>
+
+                  <!-- Top Left Index & Atmosphere -->
+                  <div class="absolute top-4 left-4 px-3 py-1 rounded-full bg-olive-950/75 backdrop-blur-md text-[11px] uppercase tracking-widest text-clay-light border border-linen/10">
+                    0${idx + 1} • ${space.atmosphere}
+                  </div>
+
+                  <!-- Top Right Photo Count Pill -->
+                  <div class="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-olive-950/75 backdrop-blur-md text-[11px] text-linen/90 border border-linen/15 inline-flex items-center gap-1.5">
+                    <i data-lucide="images" class="w-3.5 h-3.5 text-clay-light"></i>
+                    <span>${photoCount} fotos</span>
+                  </div>
+
+                  <!-- Bottom Right Sanctuary Icon -->
+                  <div class="absolute bottom-4 right-4 w-9 h-9 rounded-full bg-linen/10 backdrop-blur-md text-linen flex items-center justify-center border border-linen/15 group-hover:bg-clay group-hover:border-clay transition">
+                    <i data-lucide="${space.icon}" class="w-4 h-4"></i>
+                  </div>
+                </div>
+
+                <div class="p-6 sm:p-7">
+                  <h3 class="font-serif text-2xl text-linen group-hover:text-clay-light transition-colors">
+                    ${space.name}
+                  </h3>
+                  <p class="mt-1.5 text-xs uppercase tracking-wider text-linen/60 font-medium">
+                    ${space.tagline}
+                  </p>
+                  <p class="mt-4 text-sm sm:text-base text-linen/80 leading-relaxed">
+                    ${space.description}
+                  </p>
+                </div>
+              </div>
+
+              <div class="px-6 sm:px-7 pb-6 pt-3.5 border-t border-linen/10 flex items-center justify-between text-xs uppercase tracking-widest text-linen/75 group-hover:text-clay-light transition">
+                <span class="font-medium">Explorar Recanto</span>
+                <span class="w-7 h-7 rounded-full border border-linen/20 group-hover:border-clay-light group-hover:bg-clay-light/15 flex items-center justify-center transition">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                </span>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+
+      recantosRoot.innerHTML = `
+        <div class="max-w-7xl mx-auto">
+          <!-- Section Header -->
+          <div class="reveal max-w-3xl mb-16">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-[1px] bg-clay-light"></span>
+              <span class="text-xs uppercase tracking-[0.25em] text-clay-light font-semibold">${sanctuaries.sectionTag}</span>
+            </div>
+            <h2 class="font-serif text-3xl sm:text-5xl text-linen leading-tight">
+              ${sanctuaries.title}
+            </h2>
+            <p class="mt-4 text-base sm:text-lg text-linen/75 leading-relaxed">
+              ${sanctuaries.subtitle}
+            </p>
+          </div>
+
+          <!-- 5 Sanctuary Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+            ${cardsHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    /* 7. Render Philosophical Filter ("A Balança e a Alma") */
+    function renderPhilosophy(content) {
+      const philosophyRoot = document.getElementById('filosofia');
+      const { philosophy } = content;
+
+      const resonatesHtml = philosophy.resonatesList
+        .map(item => `
+          <li class="flex items-start gap-3 text-linen/85 text-sm sm:text-base">
+            <i data-lucide="check" class="w-5 h-5 text-clay-light shrink-0 mt-0.5"></i>
+            <span>${item}</span>
+          </li>
+        `)
+        .join('');
+
+      const preservesHtml = philosophy.preservesList
+        .map(item => `
+          <li class="flex items-start gap-3 text-linen/85 text-sm sm:text-base">
+            <i data-lucide="shield-check" class="w-5 h-5 text-olive-400 shrink-0 mt-0.5"></i>
+            <span>${item}</span>
+          </li>
+        `)
+        .join('');
+
+      philosophyRoot.innerHTML = `
+        <div class="max-w-6xl mx-auto">
+          <div class="reveal relative rounded-[2.25rem] bg-wood-950 text-linen p-8 sm:p-14 lg:p-20 shadow-2xl overflow-hidden border border-wood-800">
+            <!-- Subtle Decorative Glow -->
+            <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-clay/15 blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-olive-700/20 blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10">
+              <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-[1px] bg-clay-light"></span>
+                <span class="text-xs uppercase tracking-[0.25em] text-clay-light font-semibold">${philosophy.sectionTag}</span>
+              </div>
+
+              <!-- Core Philosophical Quote -->
+              <blockquote class="font-serif text-2xl sm:text-4xl lg:text-5xl text-linen leading-[1.2] tracking-tight max-w-4xl">
+                “${philosophy.quote}”
+              </blockquote>
+
+              <p class="mt-8 text-base sm:text-xl text-linen/90 font-light max-w-3xl leading-relaxed">
+                ${philosophy.lead}
+              </p>
+
+              <p class="mt-4 text-sm sm:text-base text-linen/70 max-w-3xl leading-relaxed">
+                ${philosophy.description}
+              </p>
+
+              <!-- Two Harmonious Columns -->
+              <div class="mt-12 pt-10 border-t border-linen/10 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div>
+                  <h3 class="font-serif text-xl text-clay-light mb-4 flex items-center gap-2">
+                    <i data-lucide="scale" class="w-5 h-5"></i>
+                    <span>${philosophy.resonatesTitle}</span>
+                  </h3>
+                  <ul class="space-y-3">
+                    ${resonatesHtml}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 class="font-serif text-xl text-olive-400 mb-4 flex items-center gap-2">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                    <span>${philosophy.preservesTitle}</span>
+                  </h3>
+                  <ul class="space-y-3">
+                    ${preservesHtml}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 8. Render Humanized Contact Section ("Uma Conversa para Começar") */
+    function renderContact(content) {
+      const contactRoot = document.getElementById('conversar');
+      const { contact } = content;
+
+      const intentionPillsHtml = contact.formLabels.intentions
+        .map((intent, idx) => `
+          <button
+            type="button"
+            data-intention="${intent}"
+            class="intention-pill text-xs sm:text-sm px-4 py-2 rounded-full border border-olive-800/20 bg-linen text-olive-900 hover:border-olive-800 transition-all ${idx === 0 ? 'bg-olive-800 text-linen border-olive-800' : ''}"
+          >
+            ${intent}
+          </button>
+        `)
+        .join('');
+
+      contactRoot.innerHTML = `
+        <div class="max-w-5xl mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <!-- Left Column: Warm Invitation -->
+            <div class="reveal lg:col-span-5 space-y-6">
+              <div class="flex items-center gap-3">
+                <span class="w-10 h-[1px] bg-clay"></span>
+                <span class="text-xs uppercase tracking-[0.25em] text-clay-dark font-semibold">${contact.sectionTag}</span>
+              </div>
+
+              <h2 class="font-serif text-3xl sm:text-4xl text-olive-950 leading-tight">
+                ${contact.headline}
+              </h2>
+
+              <p class="text-olive-800/80 text-base sm:text-lg leading-relaxed">
+                ${contact.subheadline}
+              </p>
+
+              <div class="pt-4 space-y-4 border-t border-olive-800/10">
+                <div class="flex items-center gap-3.5 text-sm text-olive-800">
+                  <span class="w-9 h-9 rounded-full bg-olive-800/10 text-olive-800 flex items-center justify-center">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                  </span>
+                  <span>${contact.channels.locationLabel}</span>
+                </div>
+                <div class="flex items-center gap-3.5 text-sm text-olive-800">
+                  <span class="w-9 h-9 rounded-full bg-olive-800/10 text-olive-800 flex items-center justify-center">
+                    <i data-lucide="coffee" class="w-4 h-4"></i>
+                  </span>
+                  <span>${contact.formLabels.privacyNote}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Minimalist Contact Card -->
+            <div class="reveal reveal-delay-1 lg:col-span-7">
+              <form id="ranchinn-contact-form" class="bg-linen p-7 sm:p-10 rounded-3xl shadow-editorial border border-olive-800/15 space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label for="visitor-name" class="block text-xs uppercase tracking-wider text-olive-800 font-semibold mb-2">
+                      ${contact.formLabels.name}
+                    </label>
+                    <input
+                      id="visitor-name"
+                      type="text"
+                      required
+                      placeholder="${contact.formLabels.namePlaceholder}"
+                      class="w-full px-4 py-3.5 rounded-xl bg-linen-warm/70 border border-olive-800/15 text-olive-950 placeholder-olive-600/50 focus:outline-none focus:border-olive-700 transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="visitor-contact" class="block text-xs uppercase tracking-wider text-olive-800 font-semibold mb-2">
+                      ${contact.formLabels.contact}
+                    </label>
+                    <input
+                      id="visitor-contact"
+                      type="text"
+                      required
+                      placeholder="${contact.formLabels.contactPlaceholder}"
+                      class="w-full px-4 py-3.5 rounded-xl bg-linen-warm/70 border border-olive-800/15 text-olive-950 placeholder-olive-600/50 focus:outline-none focus:border-olive-700 transition"
+                    />
+                  </div>
+                </div>
+
+                <!-- Intention Selector Pills -->
+                <div>
+                  <label class="block text-xs uppercase tracking-wider text-olive-800 font-semibold mb-3">
+                    ${contact.formLabels.intentionLabel}
+                  </label>
+                  <div id="intention-pills-container" class="flex flex-wrap gap-2">
+                    ${intentionPillsHtml}
+                  </div>
+                </div>
+
+                <!-- Message Prompt -->
+                <div>
+                  <label for="visitor-message" class="block text-xs uppercase tracking-wider text-olive-800 font-semibold mb-2">
+                    ${contact.formLabels.message}
+                  </label>
+                  <textarea
+                    id="visitor-message"
+                    rows="4"
+                    required
+                    placeholder="${contact.formLabels.messagePlaceholder}"
+                    class="w-full px-4 py-3.5 rounded-xl bg-linen-warm/70 border border-olive-800/15 text-olive-950 placeholder-olive-600/50 focus:outline-none focus:border-olive-700 transition resize-none"
+                  ></textarea>
+                </div>
+
+                <!-- Direct WhatsApp & Email Actions -->
+                <div class="pt-2 flex flex-col sm:flex-row gap-3.5">
+                  <button
+                    type="button"
+                    id="btn-send-whatsapp"
+                    class="flex-1 inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full bg-olive-800 hover:bg-olive-700 text-linen font-medium text-sm tracking-wide transition shadow-md"
+                  >
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>${contact.formLabels.whatsappButton}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    id="btn-send-email"
+                    class="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full bg-linen-warm hover:bg-linen-deep text-olive-950 border border-olive-800/20 font-medium text-sm tracking-wide transition"
+                  >
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    <span>${contact.formLabels.emailButton}</span>
+                  </button>
+                </div>
+
+                <p id="contact-feedback" class="hidden text-xs text-center text-olive-700 pt-1"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 9. Render Minimalist Footer */
+    function renderFooter(content) {
+      const footerRoot = document.getElementById('footer-root');
+      const year = new Date().getFullYear();
+
+      footerRoot.innerHTML = `
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div>
+            <p class="font-serif text-lg sm:text-xl text-linen">
+              ${content.footer.signature}
+            </p>
+            <p class="mt-1 text-xs sm:text-sm text-linen/50 italic font-serif">
+              “${content.footer.whisper}”
+            </p>
+          </div>
+
+          <div class="flex items-center gap-6 text-xs uppercase tracking-widest text-linen/60">
+            <a href="#olhar" class="hover:text-linen transition">O Olhar</a>
+            <a href="#origem" class="hover:text-linen transition">A Origem</a>
+            <a href="#experiencias" class="hover:text-linen transition">Experiências</a>
+            <a href="#recantos" class="hover:text-linen transition">Recantos</a>
+            <span>© ${year}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * =========================================================================
+     * INTERACTIVE BEHAVIORS & MICRO-INTERACTIONS
+     * =========================================================================
+     */
+
+    /* Scroll Reveal & Top Progress Bar */
+    function initScrollAnimations() {
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      );
+
+      reveals.forEach(el => observer.observe(el));
+
+      // Scroll Progress Bar
+      const progressBar = document.getElementById('scroll-progress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = `${progress}%`;
+      }, { passive: true });
+    }
+
+    /* Navbar Scroll Compactness & Mobile Drawer */
+    function initNavbarBehavior() {
+      const navbarInner = document.getElementById('navbar-inner');
+      const mobileBtn = document.getElementById('mobile-menu-btn');
+      const mobileDrawer = document.getElementById('mobile-menu-drawer');
+      const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+          navbarInner.classList.add('bg-olive-950/90', 'py-2.5', 'shadow-xl');
+          navbarInner.classList.remove('bg-olive-950/65', 'py-3.5');
+        } else {
+          navbarInner.classList.remove('bg-olive-950/90', 'py-2.5', 'shadow-xl');
+          navbarInner.classList.add('bg-olive-950/65', 'py-3.5');
+        }
+      }, { passive: true });
+
+      if (mobileBtn && mobileDrawer) {
+        mobileBtn.addEventListener('click', () => {
+          mobileDrawer.classList.toggle('hidden');
+        });
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            mobileDrawer.classList.add('hidden');
+          });
+        });
+      }
+    }
+
+    /**
+     * =========================================================================
+     * IMMERSIVE SANCTUARY LIGHTBOX & PHOTO GALLERY ENGINE
+     * Handles main image stage, thumbnail strip, prev/next buttons,
+     * keyboard navigation (ESC, ArrowLeft, ArrowRight), and feature badges.
+     * =========================================================================
+     */
+    function initLightboxGallery(content) {
+      const modal = document.getElementById('detail-modal');
+      const modalCard = document.getElementById('detail-modal-card');
+      const modalImg = document.getElementById('modal-img');
+      const modalCounter = document.getElementById('modal-counter');
+      const modalStageBadge = document.getElementById('modal-stage-badge');
+      const modalThumbnails = document.getElementById('modal-thumbnails');
+      const modalPrev = document.getElementById('modal-prev');
+      const modalNext = document.getElementById('modal-next');
+      const modalBadge = document.getElementById('modal-badge');
+      const modalTitle = document.getElementById('modal-title');
+      const modalSubtitle = document.getElementById('modal-subtitle');
+      const modalDesc = document.getElementById('modal-description');
+      const modalFeatures = document.getElementById('modal-features');
+      const modalClose = document.getElementById('modal-close');
+      const modalCta = document.getElementById('modal-cta');
+
+      let currentGallery = [];
+      let currentPhotoIndex = 0;
+      let currentTitle = '';
+      let isModalOpen = false;
+
+      // Render active photo on the main stage & update thumbnail active state
+      function setStagePhoto(index, animate = true) {
+        if (!currentGallery.length) return;
+
+        // Wrap index around cleanly
+        currentPhotoIndex = (index + currentGallery.length) % currentGallery.length;
+        const targetUrl = currentGallery[currentPhotoIndex];
+
+        if (animate) {
+          modalImg.classList.add('switching');
+          setTimeout(() => {
+            modalImg.src = targetUrl;
+            modalImg.alt = `${currentTitle} — Foto ${currentPhotoIndex + 1}`;
+            modalImg.onload = () => {
+              modalImg.classList.remove('switching');
+            };
+            // Fallback in case image is cached
+            setTimeout(() => modalImg.classList.remove('switching'), 60);
+          }, 160);
+        } else {
+          modalImg.src = targetUrl;
+          modalImg.alt = `${currentTitle} — Foto ${currentPhotoIndex + 1}`;
+        }
+
+        // Update counter pill
+        modalCounter.textContent = `${currentPhotoIndex + 1} / ${currentGallery.length}`;
+
+        // Update active state on thumbnail strip
+        const thumbButtons = modalThumbnails.querySelectorAll('.lightbox-thumb-btn');
+        thumbButtons.forEach((btn, idx) => {
+          if (idx === currentPhotoIndex) {
+            btn.classList.add('ring-2', 'ring-clay-light', 'opacity-100', 'scale-[1.03]');
+            btn.classList.remove('opacity-50', 'hover:opacity-85');
+            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          } else {
+            btn.classList.remove('ring-2', 'ring-clay-light', 'opacity-100', 'scale-[1.03]');
+            btn.classList.add('opacity-50', 'hover:opacity-85');
+          }
+        });
+      }
+
+      // Build clickable thumbnail strip
+      function renderThumbnails(gallery, title) {
+        modalThumbnails.innerHTML = gallery
+          .map((imgUrl, idx) => `
+            <button
+              type="button"
+              data-thumb-index="${idx}"
+              aria-label="Ver foto ${idx + 1} de ${title}"
+              class="lightbox-thumb-btn relative w-20 h-14 sm:w-24 sm:h-16 rounded-xl overflow-hidden shrink-0 transition-all duration-300 focus:outline-none ${
+                idx === 0
+                  ? 'ring-2 ring-clay-light opacity-100 scale-[1.03]'
+                  : 'opacity-50 hover:opacity-85'
+              }"
+            >
+              <img
+                src="${imgUrl}"
+                alt="${title} miniatura ${idx + 1}"
+                class="w-full h-full object-cover"
+              />
+            </button>
+          `)
+          .join('');
+
+        modalThumbnails.querySelectorAll('.lightbox-thumb-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-thumb-index'), 10);
+            if (idx !== currentPhotoIndex) {
+              setStagePhoto(idx, true);
+            }
+          });
+        });
+      }
+
+      // Open Lightbox with normalized sanctuary or experience data
+      function openLightbox(data) {
+        currentGallery = Array.isArray(data.gallery) && data.gallery.length > 0
+          ? data.gallery
+          : [data.image];
+        currentPhotoIndex = 0;
+        currentTitle = data.title;
+        isModalOpen = true;
+
+        // Populate text & badges
+        modalBadge.textContent = data.badge || '';
+        modalStageBadge.textContent = data.badge || '';
+        modalTitle.textContent = data.title || '';
+        modalSubtitle.textContent = data.subtitle || '';
+        modalDesc.textContent = data.detailedDescription || data.description || '';
+
+        // Populate atmospheric features with subtle Lucide icons
+        const featureIcons = ['sparkles', 'feather', 'trees', 'check-circle-2', 'sun', 'compass'];
+        modalFeatures.innerHTML = (data.features || [])
+          .map((feat, idx) => {
+            const iconName = featureIcons[idx % featureIcons.length];
+            return `
+              <div class="flex items-start gap-2.5 p-3 rounded-xl bg-linen-warm/90 border border-olive-800/10 text-olive-900 text-xs sm:text-sm leading-snug">
+                <i data-lucide="${iconName}" class="w-4 h-4 text-clay shrink-0 mt-0.5"></i>
+                <span>${feat}</span>
+              </div>
+            `;
+          })
+          .join('');
+
+        // Render thumbnails & set initial stage photo
+        renderThumbnails(currentGallery, currentTitle);
+        setStagePhoto(0, false);
+
+        // Toggle prev/next visibility if only 1 image
+        const showNav = currentGallery.length > 1;
+        modalPrev.style.display = showNav ? 'flex' : 'none';
+        modalNext.style.display = showNav ? 'flex' : 'none';
+
+        // Re-init Lucide icons inside modal
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+
+        // Lock body scroll & animate modal in
+        document.body.style.overflow = 'hidden';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        requestAnimationFrame(() => {
+          modal.classList.remove('opacity-0');
+          modalCard.classList.remove('scale-95');
+          modalCard.classList.add('scale-100');
+        });
+      }
+
+      // Close Lightbox cleanly
+      function closeLightbox() {
+        if (!isModalOpen) return;
+        isModalOpen = false;
+        document.body.style.overflow = '';
+
+        modal.classList.add('opacity-0');
+        modalCard.classList.remove('scale-100');
+        modalCard.classList.add('scale-95');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }, 280);
+      }
+
+      // Attach click listeners to all Sanctuary & Experience cards
+      document.querySelectorAll('[data-modal-type]').forEach(card => {
+        card.addEventListener('click', () => {
+          const type = card.getAttribute('data-modal-type');
+          const id = card.getAttribute('data-modal-id');
+
+          if (type === 'sanctuary') {
+            const space = content.sanctuaries.spaces.find(s => s.id === id);
+            if (space) {
+              openLightbox({
+                badge: space.atmosphere,
+                title: space.name,
+                subtitle: space.tagline,
+                detailedDescription: space.detailedDescription,
+                features: space.features,
+                gallery: space.gallery
+              });
+            }
+          } else if (type === 'experience') {
+            const item = content.experiences.items.find(x => x.id === id);
+            if (item) {
+              openLightbox({
+                badge: item.badge,
+                title: item.title,
+                subtitle: item.shortDesc,
+                detailedDescription: item.detailedDescription,
+                features: item.features,
+                gallery: item.gallery || [item.image]
+              });
+            }
+          }
+        });
+      });
+
+      // Prev / Next Button Listeners
+      modalPrev.addEventListener('click', e => {
+        e.stopPropagation();
+        setStagePhoto(currentPhotoIndex - 1, true);
+      });
+
+      modalNext.addEventListener('click', e => {
+        e.stopPropagation();
+        setStagePhoto(currentPhotoIndex + 1, true);
+      });
+
+      // Close Controls: Top-Right X Button & Backdrop Click
+      modalClose.addEventListener('click', closeLightbox);
+      modal.addEventListener('click', e => {
+        if (e.target === modal) closeLightbox();
+      });
+
+      // Keyboard Controls: ESC to close, Left/Right arrows to switch photos
+      window.addEventListener('keydown', e => {
+        if (!isModalOpen) return;
+        if (e.key === 'Escape') {
+          closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+          setStagePhoto(currentPhotoIndex - 1, true);
+        } else if (e.key === 'ArrowRight') {
+          setStagePhoto(currentPhotoIndex + 1, true);
+        }
+      });
+
+      // CTA Button inside Lightbox pre-fills Contact Form
+      modalCta.addEventListener('click', () => {
+        const msgInput = document.getElementById('visitor-message');
+        if (msgInput && !msgInput.value.trim()) {
+          msgInput.value = `Olá! Explorei a galeria de "${currentTitle}" no Ranchinn e gostaria de conversar sobre um momento que imagino viver aí.`;
+        }
+        closeLightbox();
+      });
+    }
+
+    /* Humanized Contact Form Actions (WhatsApp & Email) */
+    function initContactForm(content) {
+      let selectedIntention = content.contact.formLabels.intentions[0];
+      const pills = document.querySelectorAll('.intention-pill');
+      const btnWhatsapp = document.getElementById('btn-send-whatsapp');
+      const btnEmail = document.getElementById('btn-send-email');
+      const feedback = document.getElementById('contact-feedback');
+
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => {
+            p.classList.remove('bg-olive-800', 'text-linen', 'border-olive-800');
+            p.classList.add('bg-linen', 'text-olive-900');
+          });
+          pill.classList.remove('bg-linen', 'text-olive-900');
+          pill.classList.add('bg-olive-800', 'text-linen', 'border-olive-800');
+          selectedIntention = pill.getAttribute('data-intention');
+        });
+      });
+
+      function gatherFormValues() {
+        const name = document.getElementById('visitor-name').value.trim();
+        const contactInfo = document.getElementById('visitor-contact').value.trim();
+        const message = document.getElementById('visitor-message').value.trim();
+
+        if (!name || !message) {
+          feedback.textContent = "Por favor, preencha seu nome e conte um pouco sobre o momento que você imagina viver aqui.";
+          feedback.classList.remove('hidden', 'text-olive-700');
+          feedback.classList.add('text-clay-dark');
+          return null;
+        }
+
+        feedback.textContent = "Preparando sua mensagem com carinho...";
+        feedback.classList.remove('hidden', 'text-clay-dark');
+        feedback.classList.add('text-olive-700');
+
+        return { name, contactInfo, message, selectedIntention };
+      }
+
+      btnWhatsapp.addEventListener('click', () => {
+        const data = gatherFormValues();
+        if (!data) return;
+
+        const text = [
+          `Olá, pessoal do *Ranchinn*! 🌿`,
+          ``,
+          `Me chamo *${data.name}* (${data.contactInfo || 'contato via WhatsApp'}).`,
+          `*Semente / Ideia:* ${data.selectedIntention}`,
+          ``,
+          `*O momento que imagino viver aí:*`,
+          `"${data.message}"`
+        ].join('\n');
+
+        const url = `https://wa.me/${content.contact.channels.whatsappNumber}?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
+      });
+
+      btnEmail.addEventListener('click', () => {
+        const data = gatherFormValues();
+        if (!data) return;
+
+        const subject = `Conversa com o Ranchinn — ${data.selectedIntention} (${data.name})`;
+        const body = [
+          `Olá, pessoal do Ranchinn!`,
+          ``,
+          `Nome: ${data.name}`,
+          `Contato: ${data.contactInfo}`,
+          `Intenção: ${data.selectedIntention}`,
+          ``,
+          `Sobre o momento que imagino viver no Ranchinn:`,
+          `${data.message}`
+        ].join('\n');
+
+        window.location.href = `mailto:${content.contact.channels.emailAddress}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      });
+    }
+
+    // Boot Application on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', () => {
+      renderApplication(ranchinnContent);
+    });
+  </script>
+</body>
+</html>
